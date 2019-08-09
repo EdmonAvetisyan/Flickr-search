@@ -1,3 +1,4 @@
+
 $(function () {
 
 	$('#searchImageForm').on('submit', getImages);
@@ -61,7 +62,13 @@ $(function () {
 			$.each(whatToRender.items, (i, item) => {
 				if (i === imagesCount) {return false;}
 
-				$(`<img class="rounded img-thumbnail img-fluid" src="${item.media.m}" alt="${item.title}">`)
+				$(`<img>`)
+					.attr({
+						'class': 'rounded img-thumbnail img-fluid',
+						'src': item.media.m,
+						'alt': item.title,
+						'data-categorie': _makeImageCategorie(item.tags)[i]
+					})
 					.appendTo('#result-contain');
 			});
 			
@@ -93,11 +100,26 @@ $(function () {
 	}
 
 
+	let imageCategories = [];
+
+	function _makeImageCategorie(imageTags) {
+		const searchWords = tag.split(' ');
+
+		for(let i=0; i<searchWords.length; i++) {
+
+			if( imageTags.includes(searchWords[i]) ) {
+				imageCategories.push( searchWords[i] ); 
+			}
+			
+		}
+		return imageCategories;
+	}
+
 	function createBaskets(tag){
 		tag = tag.split(' ');
 
 		$.each(tag, (i, item) => {
-			$(`<div class="basket">${item}</div>`)
+			$(`<div class="basket droppable">${item}</div>`)
 				.appendTo('#basket-contain');
 		});
 	}
