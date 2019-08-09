@@ -1,3 +1,16 @@
-.spinner-border{
-  display: none;
+img{
+  max-width:20%;
+}
+#result-contain{
+  height: 100px;
+}
+.basket{
+  height: 100px;
+  flex-basis: 30%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  border-radius: 0.3rem;
+  background-color: #e3f2fd;
 }

@@ -2,9 +2,11 @@ $(function () {
 
 	$('#searchImageForm').on('submit', getImages);
 
+	let tag;
+
 	function getImages(e) {
-		e.preventDefault();
-		const tag = $(e.target.searchinput)
+		e.preventDefault(); 
+		tag = $(e.target.searchinput)
 			.val()
 			.trim()
 			.toLowerCase();
@@ -14,6 +16,7 @@ $(function () {
 			$('#searchImageForm .invalid-feedback')
 				.text('Please enter image name . . .')
 				.show();
+			$('#basket-contain').html('');	
 			return;	
 		}
 		
@@ -22,14 +25,18 @@ $(function () {
 	}
 
 	function renderResult(whatToRender) {
-
-		const spinner = $('.spinner-border');
+		const spinner = `
+			<div class="spinner-border text-primary" role="status">
+				<span class="sr-only">Loading...</span>
+			</div>
+		`;
 		const resultContain = $('#result-contain');
 		const invalidFeedback = $('#searchImageForm .invalid-feedback');
+		const basketContain = $('#basket-contain');
 
 		invalidFeedback.hide();
 		resultContain.html('');
-		spinner.hide();
+		basketContain.html('');
 
 		if (!window.navigator.onLine) {
 			invalidFeedback.text('No internet connection . . .').show();
@@ -37,32 +44,32 @@ $(function () {
 			return;
 		}
 
-		invalidFeedback.hide();
-		resultContain.html('');
-		spinner.show();
+		resultContain.html(spinner);
 
 		if (whatToRender && whatToRender.items.length === 0) {
 			invalidFeedback.text('Image not found . . . ').show();
 			resultContain.html('');
-			spinner.hide();
 			return;
 		}
 
 		if (whatToRender && whatToRender != 'error') {
 			invalidFeedback.hide();
 			resultContain.html('');
-			spinner.hide();
 
-			$.each(whatToRender.items, function (i, item) {
-				$("<img />").attr("src", item.media.m).appendTo('#result-contain');
-				if (i === 3) {
-					return false;
-				}
+			const imagesCount = 5;
+
+			$.each(whatToRender.items, (i, item) => {
+				if (i === imagesCount) {return false;}
+
+				$(`<img class="rounded img-thumbnail img-fluid" src="${item.media.m}" alt="${item.title}">`)
+					.appendTo('#result-contain');
 			});
+			
+			createBaskets(tag);
+
 		} else if (whatToRender == 'error') {
 			invalidFeedback.text('Error ...  Please try again').show();
 			resultContain.html('');
-			spinner.hide();
 		}
 	}
 
@@ -76,13 +83,23 @@ $(function () {
 				tags: tag
 			}
 		)
-			.done(function (data) {
+			.done( (data) => {
 				console.log(data);
 				renderResult(data);
 			})
-			.fail(function (jqxhr, textStatus) {
+			.fail( (jqxhr, textStatus) => {
 				renderResult(textStatus);
 			});
+	}
+
+
+	function createBaskets(tag){
+		tag = tag.split(' ');
+
+		$.each(tag, (i, item) => {
+			$(`<div class="basket">${item}</div>`)
+				.appendTo('#basket-contain');
+		});
 	}
 
 });
