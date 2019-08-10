@@ -7,6 +7,11 @@
   min-width: 0%;
 }
 
+#selected-contain {
+  border: 1px solid;
+  padding: .25rem;
+}
+
 .basket {
   flex-basis: 30%;
   display: flex;
@@ -14,7 +19,7 @@
   flex-direction: column;
   text-align: center;
   border-radius: 0.3rem;
-  background-color: #e3f2fd;
+  background-color: #cce5ff;
 }
 
 .active-basket {
@@ -23,4 +28,4 @@
 
 .hover-basket {
   background-color: #bbdefb;
-}
+} 
