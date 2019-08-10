@@ -1,11 +1,13 @@
-img{
-  max-width:20%;
-}
-#result-contain{
+.contain {
   height: 100px;
 }
-.basket{
-  height: 100px;
+
+.contain img {
+  width: 20%;
+  min-width: 0%;
+}
+
+.basket {
   flex-basis: 30%;
   display: flex;
   justify-content: center;
@@ -13,4 +15,12 @@ img{
   text-align: center;
   border-radius: 0.3rem;
   background-color: #e3f2fd;
+}
+
+.active-basket {
+  border: 1px dashed #007bff;
+}
+
+.hover-basket {
+  background-color: #bbdefb;
 }

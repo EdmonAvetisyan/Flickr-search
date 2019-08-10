@@ -1,5 +1,4 @@
-
-$(function () {
+$(function() {
 
 	$('#searchImageForm').on('submit', getImages);
 
@@ -62,9 +61,9 @@ $(function () {
 			$.each(whatToRender.items, (i, item) => {
 				if (i === imagesCount) {return false;}
 
-				$(`<img>`)
+				$('<img>')
 					.attr({
-						'class': 'rounded img-thumbnail img-fluid',
+						'class': 'img-thumbnail',
 						'src': item.media.m,
 						'alt': item.title,
 						'data-categorie': _makeImageCategorie(item.tags)[i]
@@ -73,6 +72,8 @@ $(function () {
 			});
 			
 			createBaskets(tag);
+			dragAndDrop();
+			
 
 		} else if (whatToRender == 'error') {
 			invalidFeedback.text('Error ...  Please try again').show();
@@ -99,7 +100,6 @@ $(function () {
 			});
 	}
 
-
 	let imageCategories = [];
 
 	function _makeImageCategorie(imageTags) {
@@ -119,9 +119,46 @@ $(function () {
 		tag = tag.split(' ');
 
 		$.each(tag, (i, item) => {
-			$(`<div class="basket droppable">${item}</div>`)
+			$(`<div>${item}</div>`)
+				.attr({
+					'class': 'basket',
+					'data-categorie': item
+				})
 				.appendTo('#basket-contain');
 		});
+	}
+	
+	function dragAndDrop(){
+		$('#result-contain img').addClass('draggable');
+		$('#basket-contain .basket').addClass('droppable');
+		$( ".draggable" ).draggable({ revert: true });
+
+		$( ".droppable" ).droppable({
+			accept: ".draggable",
+			classes: {
+        "ui-droppable-active": "active-basket",
+        "ui-droppable-hover": "hover-basket"
+      },
+			drop: function ( event, ui ) {
+				const dragCategorie = ui.draggable[0].getAttribute('data-categorie');
+				const dropCategorie = event.target.getAttribute('data-categorie');
+
+				if ( dragCategorie === dropCategorie ){
+					$('#result-contain').find(ui.draggable[0]).remove();
+					selectImage(ui.draggable[0].src);
+				} else {
+					$( ".draggable" ).draggable({ revert: true });
+					$( this ).removeClass( "dropped-basket" );
+				}
+			}
+		});
+	}
+
+	function selectImage(imgSrc){
+		$('#selected-contain')
+			.append(`
+				<img src="${imgSrc}" class="img-thumbnail">
+			`);
 	}
 
 });
